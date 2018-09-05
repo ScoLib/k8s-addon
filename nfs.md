@@ -33,14 +33,14 @@ ansible-galaxy install geerlingguy.nfs
 
 ### 3 编辑 Playbook 文件
 
-见： [nfs-server.yaml](./files/nfs/nfs-server.yaml)
+见： [nfs-server.yaml](./files/nfs-server.yaml)
 
 
 
 ### 4 执行 Playbook
 
 ```sh
-ansible-playbook ./files/nfs/nfs-server.yaml
+ansible-playbook ./files/nfs-server.yaml
 ```
 
 
@@ -51,13 +51,13 @@ ansible-playbook ./files/nfs/nfs-server.yaml
 
 ### 配置参数
 
-见：  [nfs-client-provisioner.yaml](./files/nfs/nfs-client-provisioner.yaml)
+[nfs-client-provisioner.yaml](./files/nfs-client-provisioner.yaml)
 
-参数说明见： [https://github.com/helm/charts/blob/master/stable/nfs-client-provisioner/README.md](https://github.com/helm/charts/blob/master/stable/nfs-client-provisioner/README.md)
+参数说明见： [stable/nfs-client-provisioner/README.md#configuration](https://github.com/helm/charts/blob/master/stable/nfs-client-provisioner/README.md#configuration)
 
 ### 安装 provisioner
 
 ```sh
-helm install --name nfs-client-provisioner -f ./files/nfs/nfs-client-provisioner.yaml stable/nfs-client-provisioner
+helm install --name nfs-client-provisioner -f ./files/nfs-client-provisioner.yaml stable/nfs-client-provisioner
 ```
 
