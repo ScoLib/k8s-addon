@@ -2,9 +2,11 @@
 
 ## 配置参数
 
-[nginx-ingress.yaml](./files/nginx-ingress.yaml)
+[nginx-ingress.yaml](./files/nginx-ingress.yaml) 参考文档 [stable/nginx-ingress/README.md#configuration ](https://github.com/helm/charts/blob/master/stable/nginx-ingress/README.md#configuration)
 
-参数说明见：[stable/nginx-ingress/README.md#configuration](https://github.com/helm/charts/blob/master/stable/nginx-ingress/README.md#configuration)
+- 替换 `controller` 和 `default-backend`  镜像
+- 指定 `service.type`  为  `NodePort`，以及 `service.nodePorts` 为 `32080`/ `32443`
+
 
 
 

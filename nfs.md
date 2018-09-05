@@ -44,9 +44,13 @@ ansible-playbook ./files/nfs-server.yaml
 
 ### 配置参数
 
-[nfs-client-provisioner.yaml](./files/nfs-client-provisioner.yaml)
+[nfs-client-provisioner.yaml](./files/nfs-client-provisioner.yaml) 参考文档  [stable/nfs-client-provisioner/README.md#configuration](https://github.com/helm/charts/blob/master/stable/nfs-client-provisioner/README.md#configuration)
 
-参数说明见： [stable/nfs-client-provisioner/README.md#configuration](https://github.com/helm/charts/blob/master/stable/nfs-client-provisioner/README.md#configuration)
+- 开启  `storageClass.defaultClass`
+
+> 注意： 需要手动指定 `nfs` 的 `server` 和 `path`
+
+
 
 ### 安装 provisioner
 

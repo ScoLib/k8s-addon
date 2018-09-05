@@ -14,6 +14,8 @@ global:
     configureCertmanager: false
     annotations: {}
     enabled: true
+    tls:
+      secretName: 'gitlab-wildcard-tls'
   initialRootPassword: {}
   psql:
     password: {}
@@ -255,7 +257,6 @@ gitlab:
     image:
       repository: scolib/gitlab-org-build-cng-gitlab-shell
       # tag: v8.1.1
-
-task-runner:
-  image:
-    repository: scolib/gitlab-org-build-cng-gitlab-task-runner-ce
+  task-runner:
+    image:
+      repository: scolib/gitlab-org-build-cng-gitlab-task-runner-ce

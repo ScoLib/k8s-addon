@@ -4,9 +4,12 @@
 
 ## 配置
 
-[mysqlha.yaml](./files/mysqlha.yaml)
+[mysqlha.yaml](./files/mysqlha.yaml) 参考文档  [incubator/mysqlha/README.md#configuration](https://github.com/helm/charts/blob/master/incubator/mysqlha/README.md#configuration)
 
-参数说明见： [incubator/mysqlha/README.md#configuration](https://github.com/helm/charts/blob/master/incubator/mysqlha/README.md#configuration)
+- 替换 `xtraBackupImage` 镜像
+
+
+
 
 ## 执行安装
 
