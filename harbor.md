@@ -2,11 +2,10 @@
 
 ## 配置参数
 
-[harbor.yaml](./files/harbor.yaml)
+[harbor.yaml](./files/harbor.yaml) 参考 [官方文档](https://github.com/goharbor/harbor-helm/blob/master/README.md) 做以下调整
 
-参数说明见： [goharbor/harbor-helm/blob/master/README.md#configuration](https://github.com/goharbor/harbor-helm/blob/master/README.md#configuration)
-
-
+- 指定 `externalURL`
+- 指定 `ingress.hosts` 并关闭 `ingress.tls`
 
 ## 执行安装
 

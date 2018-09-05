@@ -2,13 +2,6 @@
 
 
 
-## 前提
-
-- 安装 ansible
-- 安装 helm
-
-
-
 ## NFS服务器
 
 > 基于ansible 部署
