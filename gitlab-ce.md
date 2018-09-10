@@ -5,10 +5,11 @@
 [gitlab-ce.yaml](./files/gitlab-ce.yaml) 参考文档 [https://gitlab.com/charts/gitlab/blob/master/doc/charts/README.md](https://gitlab.com/charts/gitlab/blob/master/doc/charts/README.md)
 
 - 替换所有镜像
+- 指定 `global.imagePullPolicy` 为 `Always`
 - 指定 `global.hosts.domain` `global.ingress.tls.secretName`
+- 指定 `global.ingress.class` 
 - 关闭 `global.hosts.https` `global.ingress.configureCertmanager`
-- 关闭安装 `certmanager` `nginx-ingress` `prometheus` 
-- 禁用 s3 缓存  `gitlab-runner.runners.cache`
+- 关闭安装 `certmanager` `nginx-ingress` `prometheus`  `gitlab-runner`
 - 分配资源 `gitlab.unicorn.resources`
 
 
@@ -18,10 +19,18 @@
 ### 手动创建secret：
 
 ```sh
-kubectl create secret tls gitlab-wildcard-tls --cert=<path/to-full-chain.crt> --key=<path/to.key>
+kubectl create secret tls gitlab-wildcard-tls --cert=<path/to-full-chain.crt> --key=<path/to.key> -n gitlab
 ```
 
 该证书和key必须是办法给 `global.hosts.domain` 的
+
+
+
+如果 `namspace` `gitlab` 不存在，则需要先创建 
+
+```sh
+kubectl create namespace gitlab
+```
 
 
 
@@ -35,3 +44,18 @@ helm install --name gitlab -f ./files/gitlab-ce.yaml --namespace gitlab gitlab/g
 
 
 
+## 关于 `gitlab-runner`
+
+> 如果 `global.hosts.domain` 使用的是公网域名，则可以忽略以下内容，并开启安装 `gitlab-runner`
+
+由于 `global.hosts.domain` 指定的是本地域名，如果开启安装 `gitlab-runner` 会出现pod里无法请求 `gitlab` 的错误 
+
+`` 
+
+可以执行以下 `sh`  手动安装 `gitlab-runner`
+
+```sh
+helm install --name gitlab-runner --namespace gitlab gitlab/gitlab-runner --set gitlabUrl=http://gitlab-unicorn.gitlab.svc.cluster.local:8181/,runnerRegistrationToken=<registration token>,rbac.create=true 
+```
+
+`runnerRegistrationToken` 需登录 `gitlab` `Admin Area` 查看具体值

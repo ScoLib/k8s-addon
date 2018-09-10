@@ -3,16 +3,18 @@
 
 global:
   # gitlabVersion: master
+  imagePullPolicy: Always
   application:
     create: false
     links: []
   hosts:
     domain: k8s.lo
-    https: false
+    https: true
     externalIP:
   ingress:
     configureCertmanager: false
     annotations: {}
+    class: 'nginx'
     enabled: true
     tls:
       secretName: 'gitlab-wildcard-tls'
@@ -222,11 +224,17 @@ shared-secrets:
       repository: scolib/gitlab-org-build-cng-cfssl-self-sign
 
 gitlab-runner:
-  install: true
+  install: false
   rbac:
     create: true
   runners:
-    cache: {}
+    cache:
+      cacheType: s3
+      s3BucketName: runner-cache
+      cacheShared: true
+      s3BucketLocation: us-east-1
+      s3CachePath: gitlab-runner
+      s3CacheInsecure: false
 
 gitlab:
   migrations:
@@ -251,8 +259,6 @@ gitlab:
   gitaly:
     image:
       repository: scolib/gitlab-org-build-cng-gitaly
-    persistence:
-      # storageClass: ''
   gitlab-shell:
     image:
       repository: scolib/gitlab-org-build-cng-gitlab-shell

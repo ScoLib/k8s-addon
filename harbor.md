@@ -18,6 +18,6 @@ git clone https://github.com/goharbor/harbor-helm
 cd harbor-helm
 helm dependency update
 cd ../
-helm install --name harbor -f ./files/harbor.yaml ./harbor-helm
+helm install --name harbor -f ./files/harbor.yaml --namespace harbor ./harbor-helm
 ```
 
