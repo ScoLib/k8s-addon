@@ -50,7 +50,10 @@ helm install --name gitlab -f ./files/gitlab-ce.yaml --namespace gitlab gitlab/g
 
 由于 `global.hosts.domain` 指定的是本地域名，如果开启安装 `gitlab-runner` 会出现pod里无法请求 `gitlab` 的错误 
 
-`` 
+```sh
+ERROR: Registering runner... failed                 runner=023KfPaP status=couldn't execute POST against https://gitlab.k8s.lo/api/v4/runners: Post https://gitlab.k8s.lo/api/v4/runners: x509: certificate signed by unknown authority
+PANIC: Failed to register this runner. Perhaps you are having network problems
+```
 
 可以执行以下 `sh`  手动安装 `gitlab-runner`
 
