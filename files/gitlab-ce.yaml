@@ -224,17 +224,11 @@ shared-secrets:
       repository: scolib/gitlab-org-build-cng-cfssl-self-sign
 
 gitlab-runner:
-  install: false
+  install: true
   rbac:
     create: true
   runners:
     cache:
-      cacheType: s3
-      s3BucketName: runner-cache
-      cacheShared: true
-      s3BucketLocation: us-east-1
-      s3CachePath: gitlab-runner
-      s3CacheInsecure: false
 
 gitlab:
   migrations:
