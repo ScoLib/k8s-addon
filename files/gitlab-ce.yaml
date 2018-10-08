@@ -11,6 +11,7 @@ global:
     domain: k8s.lo
     https: true
     externalIP:
+    ssh: ~
   ingress:
     configureCertmanager: false
     annotations: {}
@@ -36,8 +37,16 @@ global:
     enabled: true
     credentials: {}
   appConfig:
+    defaultCanCreateGroup: true
+    usernameChangingEnabled: true
     issueClosingPattern:
     defaultTheme:
+    defaultProjectsFeatures:
+      issues: true
+      mergeRequests: true
+      wiki: true
+      snippets: true
+      builds: true
     webhookTimeout:
     gravatar:
       plainUrl:
@@ -78,6 +87,7 @@ global:
   registry:
     bucket: registry
     certificate: {}
+    httpSecret: {}
   runner:
     registrationToken: {}
   # Outgoing email server settings
@@ -206,7 +216,6 @@ postgresql:
     ## Optionally define additional custom metrics
     ## ref: https://github.com/wrouesnel/postgres_exporter#adding-new-metrics-via-a-config-file
 
-
 # registry:
 #   enabled: false
 #
@@ -214,6 +223,7 @@ postgresql:
 #   enabled: false
 
 shared-secrets:
+  enabled: true
   rbac:
     create: true
   image:
@@ -229,7 +239,8 @@ gitlab-runner:
     create: true
   runners:
     cache:
-
+  certsSecretName: 'gitlab-runner-certs-secret'
+  
 gitlab:
   migrations:
     image:

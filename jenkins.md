@@ -12,7 +12,7 @@
 
 - 调整 `Master.JavaOpts`
 
-- 增加插件 `gitlab`  (`Master.InstallPlugins`)   
+- 增加插件 `gitlab` `script-security` (`Master.InstallPlugins`)   
 
 - RBAC权限开启 (`rbac.install`)
 

@@ -8,30 +8,39 @@
 - 指定 `global.imagePullPolicy` 为 `Always`
 - 指定 `global.hosts.domain` `global.ingress.tls.secretName`
 - 指定 `global.ingress.class` 
-- 关闭 `global.hosts.https` `global.ingress.configureCertmanager`
+- 关闭 `global.ingress.configureCertmanager`
 - 关闭安装 `certmanager` `nginx-ingress` `prometheus`  
 - 禁用 s3 缓存  `gitlab-runner.runners.cache`
+- 指定 `gtlab-runner.certsSecretName` 
 - 分配资源 `gitlab.unicorn.resources`
 
 
 
 注： 因为关闭了 `certmanager` ，所以需要指定 `global.ingress.tls.secretName` 
 
-### 手动创建secret：
-
-```sh
-kubectl create secret tls gitlab-wildcard-tls --cert=<path/to-full-chain.crt> --key=<path/to.key> -n gitlab
-```
-
-该证书和key必须是办法给 `global.hosts.domain` 的
-
-
-
-如果 `namspace` `gitlab` 不存在，则需要先创建 
+### 创建 `namspace` `gitlab`  
 
 ```sh
 kubectl create namespace gitlab
 ```
+
+### 创建Ingress TLS secret：
+
+```sh
+kubectl create secret tls gitlab-wildcard-tls --cert=<path/tls.crt> --key=<path/tls.key> -n gitlab
+```
+
+该证书和key必须是颁发给 `global.hosts.domain` 的
+
+### GitLab Runner 关联的gitlab证书 secret
+
+```sh
+kubectl -n gitlab create secret generic gitlab-runner-certs-secret --from-file=gitlab.k8s.lo.crt=<path/tls.crt>  --from-file=registry.k8s.lo.crt=<path/tls.crt> --from-file=minio.k8s.lo.crt=<path/tls.crt>
+```
+
+
+
+
 
 
 
@@ -42,5 +51,6 @@ helm repo add gitlab https://charts.gitlab.io/
 helm repo update
 helm install --name gitlab -f ./files/gitlab-ce.yaml --namespace gitlab gitlab/gitlab 
 ```
+
 
 

@@ -1,5 +1,5 @@
 persistence:
-  enabled: true
+  enabled: &persistence_enabled true
 # Ther external URL for Harbor core service. It is used to
 # 1) populate the docker/helm commands showed on portal
 # 2) populate the token service URL returned to docker/notary client
@@ -28,39 +28,29 @@ ingress:
     secretName: ""
 
 harborAdminPassword: Harbor12345
-authenticationMode: "db_auth"
-selfRegistration: "on"
-ldap:
-  url: "ldaps://ldapserver"
-  searchDN: ""
-  searchPassword: ""
-  baseDN: ""
-  filter: "(objectClass=person)"
-  uid: "uid"
-  scope: "2"
-  timeout: "5"
-  verifyCert: "True"
-email:
-  host: "smtp.mydomain.com"
-  port: "25"
-  username: "sample_admin@mydomain.com"
-  password: "password"
-  ssl: "false"
-  insecure: "false"
-  from: "admin <sample_admin@mydomain.com>"
-  identity: ""
-
 # The secret key used for encryption. Must be a string of 16 chars.
 secretKey: not-a-secure-key
 
-# The tag for Harbor docker images.
-harborImageTag: &harbor_image_tag dev
+imagePullPolicy: IfNotPresent
+
+portal:
+  image:
+    repository: goharbor/harbor-portal
+    tag: dev
+  replicas: 1
+# resources:
+#  requests:
+#    memory: 256Mi
+#    cpu: 100m
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
 adminserver:
   image:
     repository: goharbor/harbor-adminserver
-    tag: *harbor_image_tag
-    pullPolicy: IfNotPresent
+    tag: dev
+  replicas: 1
   # resources:
   #  requests:
   #    memory: 256Mi
@@ -72,10 +62,15 @@ adminserver:
 jobservice:
   image:
     repository: goharbor/harbor-jobservice
-    tag: *harbor_image_tag
-    pullPolicy: IfNotPresent
-  secret: not-a-secure-secret
+    tag: dev
+  replicas: 1
   maxWorkers: 50
+  volumes:
+    data:
+      # existingClaim: ""
+      # storageClass: "-"
+      accessMode: ReadWriteOnce
+      size: 1Gi
 # resources:
 #   requests:
 #     memory: 256Mi
@@ -84,12 +79,11 @@ jobservice:
   tolerations: []
   affinity: {}
 
-ui:
+core:
   image:
-    repository: goharbor/harbor-ui
-    tag: *harbor_image_tag
-    pullPolicy: IfNotPresent
-  secret: not-a-secure-secret
+    repository: goharbor/harbor-core
+    tag: dev
+  replicas: 1
 # resources:
 #  requests:
 #    memory: 256Mi
@@ -106,12 +100,12 @@ database:
   internal:
     image:
       repository: goharbor/harbor-db
-      tag: *harbor_image_tag
-      pullPolicy: IfNotPresent
+      tag: dev
     # the superuser password of database
     password: "changeit"
     volumes:
       data:
+        # existingClaim: ""
         # storageClass: "-"
         accessMode: ReadWriteOnce
         size: 1Gi
@@ -131,76 +125,19 @@ database:
     clairDatabase: "clair"
     notaryServerDatabase: "notary_server"
     notarySignerDatabase: "notary_signer"
+    sslmode: "disable"
 
 registry:
-  image:
-    repository: goharbor/registry-photon
-    tag: dev
-    pullPolicy: IfNotPresent
-  httpSecret: not-a-secure-secret
-  logLevel: info
-  storage:
-    # specify the type of storage: "filesystem", "azure", "gcs", "s3", "swift", 
-    # "oss" and fill the information needed in the corresponding section
-    type: filesystem
-    filesystem:
-      rootdirectory: /var/lib/registry
-      #maxthreads: 100
-    azure:
-      accountname: accountname
-      accountkey: base64encodedaccountkey
-      container: containername
-      #realm: core.windows.net
-    gcs:
-      bucket: bucketname
-      # TODO: support the keyfile of gcs
-      #keyfile: /path/to/keyfile
-      #rootdirectory: /gcs/object/name/prefix
-      #chunksize: 5242880
-    s3:
-      region: us-west-1
-      bucket: bucketname
-      #accesskey: awsaccesskey
-      #secretkey: awssecretkey
-      #regionendpoint: http://myobjects.local
-      #encrypt: false
-      #keyid: mykeyid
-      #secure: true
-      #v4auth: true
-      #chunksize: 5242880
-      #rootdirectory: /s3/object/name/prefix
-      #storageclass: STANDARD
-    swift:
-      authurl: https://storage.myprovider.com/v3/auth
-      username: username
-      password: password
-      container: containername
-      #region: fr
-      #tenant: tenantname
-      #tenantid: tenantid
-      #domain: domainname
-      #domainid: domainid
-      #trustid: trustid
-      #insecureskipverify: false
-      #chunksize: 5M
-      #prefix:
-      #secretkey: secretkey
-      #accesskey: accesskey
-      #authversion: 3
-      #endpointtype: public
-      #tempurlcontainerkey: false
-      #tempurlmethods:
-    oss:
-      accesskeyid: accesskeyid
-      accesskeysecret: accesskeysecret
-      region: regionname
-      bucket: bucketname
-      #endpoint: endpoint
-      #internal: false
-      #encrypt: false
-      #secure: true
-      #chunksize: 10M
-      #rootdirectory: rootdirectory
+  registry:
+    image:
+      repository: goharbor/registry-photon
+      tag: dev
+    logLevel: info
+  controller:
+    image:
+      repository: goharbor/harbor-registryctl
+      tag: dev
+  replicas: 1
   ## Persist data to a persistent volume
   volumes:
     data:
@@ -221,7 +158,7 @@ chartmuseum:
   image:
     repository: goharbor/chartmuseum-photon
     tag: dev
-    pullPolicy: IfNotPresent
+  replicas: 1
   volumes:
     data:
       # existingClaim: ""
@@ -236,12 +173,78 @@ chartmuseum:
   tolerations: []
   affinity: {}
 
+# Define which storage backend is used for registry and chartmuseum.
+# Refer to https://github.com/docker/distribution/blob/master/docs/configuration.md#storage 
+# for the detail.
+storage:
+  # specify the type of storage: "filesystem", "azure", "gcs", "s3", "swift", 
+  # "oss" and fill the information needed in the corresponding section
+  type: filesystem
+  filesystem:
+    rootdirectory: /var/lib/registry
+    #maxthreads: 100
+  azure:
+    accountname: accountname
+    accountkey: base64encodedaccountkey
+    container: containername
+    #realm: core.windows.net
+  gcs:
+    bucket: bucketname
+    # TODO: support the keyfile of gcs
+    #keyfile: /path/to/keyfile
+    #rootdirectory: /gcs/object/name/prefix
+    #chunksize: 5242880
+  s3:
+    region: us-west-1
+    bucket: bucketname
+    #accesskey: awsaccesskey
+    #secretkey: awssecretkey
+    #regionendpoint: http://myobjects.local
+    #encrypt: false
+    #keyid: mykeyid
+    #secure: true
+    #v4auth: true
+    #chunksize: 5242880
+    #rootdirectory: /s3/object/name/prefix
+    #storageclass: STANDARD
+  swift:
+    authurl: https://storage.myprovider.com/v3/auth
+    username: username
+    password: password
+    container: containername
+    #region: fr
+    #tenant: tenantname
+    #tenantid: tenantid
+    #domain: domainname
+    #domainid: domainid
+    #trustid: trustid
+    #insecureskipverify: false
+    #chunksize: 5M
+    #prefix:
+    #secretkey: secretkey
+    #accesskey: accesskey
+    #authversion: 3
+    #endpointtype: public
+    #tempurlcontainerkey: false
+    #tempurlmethods:
+  oss:
+    accesskeyid: accesskeyid
+    accesskeysecret: accesskeysecret
+    region: regionname
+    bucket: bucketname
+    #endpoint: endpoint
+    #internal: false
+    #encrypt: false
+    #secure: true
+    #chunksize: 10M
+    #rootdirectory: rootdirectory
+
 clair:
   enabled: true
   image:
     repository: goharbor/clair-photon
     tag: dev
-    pullPolicy: IfNotPresent
+  replicas: 1
   # The interval of clair updaters, the unit is hour, 
   # set to 0 to disable the updaters
   updatersInterval: 12
@@ -263,14 +266,26 @@ redis:
     enabled: false
   master:
     persistence:
-# TODO: There is a perm issue: Can't open the append-only file: Permission denied
-# TODO: Setting it to false is a temp workaround.  Will re-visit this problem.
-      enabled: false
+      enabled: *persistence_enabled
+      # storageClass: "-"
+      accessMode: ReadWriteOnce
+      size: 1Gi
+    nodeSelector: {}
+    # Overwrite the default value in the Redis chart
+    # as the command "FLUSHDB" is needed for online GC
+    disableCommands: ""
+  persistence:
+    # existingClaim:
   external:
     enabled: false
     host: "192.168.0.2"
     port: "6379"
-    databaseIndex: "0"
+    # The "coreDatabaseIndex" must be "0" as the library Harbor
+    # used doesn't support configuring it
+    coreDatabaseIndex: "0"
+    jobserviceDatabaseIndex: "1"
+    registryDatabaseIndex: "2"
+    chartmuseumDatabaseIndex: "3"
     usePassword: false
     password: "changeit"
 
@@ -280,18 +295,12 @@ notary:
     image:
       repository: goharbor/notary-server-photon
       tag: dev
-      pullPolicy: IfNotPresent
+    replicas: 1
   signer:
     image:
       repository: goharbor/notary-signer-photon
       tag: dev
-      pullPolicy: IfNotPresent
-    env:
-      NOTARY_SIGNER_DEFAULTALIAS: defaultalias
-    # The TLS certificate for Notary Signer. Will auto generate them if unspecified here.
-    caCrt:
-    tlsCrt:
-    tlsKey:
+    replicas: 1
   nodeSelector: {}
   tolerations: []
   affinity: {}

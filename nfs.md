@@ -26,14 +26,26 @@ ansible-galaxy install geerlingguy.nfs
 
 ### 3 编辑 Playbook 文件
 
-见： [nfs-server.yaml](./files/nfs-server.yaml)
+```sh
+cat << EOF > ~/nfs-server.yaml
+- hosts:
+  - nfs-server
+  roles:
+  - geerlingguy.nfs
+  vars:
+    nfs_exports: [
+        # /etc/exports 配置文件内容 如：
+        "/data/nfs 172.168.1.0/24(rw,sync,insecure,no_subtree_check,no_root_squash)"
+    ]
+EOF
+```
 
 
 
 ### 4 执行 Playbook
 
 ```sh
-ansible-playbook ./files/nfs-server.yaml
+ansible-playbook ~/nfs-server.yaml
 ```
 
 
