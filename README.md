@@ -12,3 +12,5 @@
 - [Helm 安装 Harbor](./harbor.md)
 - [Helm 安装 MySQL HA](./mysqlha.md)
 - [Helm 安装 Jenkins](./jenkins.md)
+- [Helm 安装 Kubernetes Dashboard](./kubernetes-dashboard.md)
+
