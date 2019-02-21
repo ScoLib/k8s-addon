@@ -17,6 +17,6 @@
 
 ```sh
 helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
-helms install --name mysqlha -f ./files/mysqlha.yaml incubator/mysqlha
+helm install --name mysqlha -f ./files/mysqlha.yaml incubator/mysqlha
 ```
 
