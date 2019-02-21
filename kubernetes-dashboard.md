@@ -8,7 +8,8 @@
 - `extraArgs` 增加参数 `token-ttl=1800`
 - 指定 `tolerations` 
 - 开启 `ingress`
-- 指定 `ingress.hosts`
+- 指定 `ingress.hosts`、 `ingress.annotations`
+- 开启 `rbac.clusterAdminRole`
 
 
 
@@ -17,5 +18,15 @@
 
 ```sh
 helm install --name kubernetes-dashboard -f ./files/kubernetes-dashboard.yaml stable/kubernetes-dashboard
+```
+
+
+
+
+
+```sh
+kubectl create secret generic kubernetes-dashboard-tls --from-file=dashboard.k8s.lo.crt=<path/tls.crt>
+
+kubectl create secret generic kubernetes-dashboard-tls --from-file=/root/nginx_ssl/certs/ -n dashboard
 ```
 
