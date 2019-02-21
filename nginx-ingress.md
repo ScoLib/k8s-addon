@@ -13,6 +13,6 @@
 ## 执行
 
 ```sh
-helm install --name nginx-ingress -f ./files/nginx-ingress.yaml stable/nginx-ingress
+helm install --name nginx-ingress -n ingress -f ./files/nginx-ingress.yaml stable/nginx-ingress
 ```
 
