@@ -50,7 +50,7 @@ ansible-playbook ~/nfs-server.yaml
 
 
 
-##nfs-client-provisioner
+## nfs-client-provisioner
 
 > 基于 helm 部署
 
@@ -58,7 +58,8 @@ ansible-playbook ~/nfs-server.yaml
 
 [nfs-client-provisioner.yaml](./files/nfs-client-provisioner.yaml) 参考文档  [stable/nfs-client-provisioner/README.md#configuration](https://github.com/helm/charts/blob/master/stable/nfs-client-provisioner/README.md#configuration)
 
-- 开启  `storageClass.defaultClass`
+- 修改 `image.repository`
+- 开启 `storageClass.defaultClass`
 
 > 注意： 需要手动指定 `nfs` 的 `server` 和 `path`
 
