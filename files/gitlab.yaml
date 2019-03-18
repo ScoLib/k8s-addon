@@ -76,7 +76,7 @@ global:
     enabled: true
     tls:
       enabled: true
-      secretName: gitlab-wildcard-tls
+      secretName: gitlab-ingress-tls
 
   ## Initial root password for this GitLab installation
   ## Secret created according to doc/installation/secrets.md#initial-root-password

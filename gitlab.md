@@ -25,7 +25,7 @@ kubectl create namespace gitlab
 ### 创建Ingress TLS secret：
 
 ```sh
-kubectl create secret tls gitlab-wildcard-tls --cert=<path/tls.crt> --key=<path/tls.key> -n gitlab
+kubectl create secret tls gitlab-ingress-tls --cert=<path/tls.crt> --key=<path/tls.key> -n gitlab
 ```
 
 该证书和key必须是颁发给 `global.hosts.domain` 的
