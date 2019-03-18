@@ -450,7 +450,7 @@ shared-secrets:
     create: true
   image:
     repository: scolib/kubectl
-    tag: latest
+    tag: 1f8690f03f7aeef27e727396927ab3cc96ac89e7
   selfsign:
     image:
       repository: scolib/cfssl-self-sign
