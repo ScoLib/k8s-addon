@@ -5,6 +5,7 @@
 [harbor.yaml](./files/harbor.yaml) 参考文档 [goharbor/harbor-helm/blob/master/README.md](https://github.com/goharbor/harbor-helm/blob/master/README.md) 
 
 - 指定 `expose.tls.secretName`、`expose.ingress.hosts`
+- - 指定 `externalURL`
 
 ### 创建 Namespace harbor
 
@@ -24,10 +25,8 @@ kubectl create secret tls harbor-ingress-tls --cert=<path/tls.crt> --key=<path/t
 ## 执行安装
 
 ```sh
+cd ~
 git clone https://github.com/goharbor/harbor-helm
-cd harbor-helm
-helm dependency update
-cd ../
-helm install --name harbor -f ./files/harbor.yaml --namespace harbor ./harbor-helm
+helm install --name harbor -f ./k8s-addon/files/harbor.yaml --namespace harbor ./harbor-helm
 ```
 
