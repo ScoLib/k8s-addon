@@ -5,10 +5,30 @@
 [kubernetes-dashboard.yaml](./files/kubernetes-dashboard.yaml) 参考文档 [stable/kubernetes-dashboard/README.md#configuration](https://github.com/helm/charts/blob/master/stable/kubernetes-dashboard/README.md#configuration)
 
 - 替换镜像
-- `extraArgs` 增加参数 `token-ttl=1800`
+
+- ~~`extraArgs` 增加参数 `token-ttl=1800`~~
+
 - 指定 `tolerations` 
+
+  ```
+    # 不调度master节点
+    - key: node-role.kubernetes.io/master
+      effect: NoSchedule
+  ```
+
+  
+
 - 开启 `ingress`
-- 指定 `ingress.hosts`、 `ingress.annotations`
+
+- 指定 `ingress.hosts`
+
+- 指定 `ingress.annotations`
+
+  ```
+  kubernetes.io/ingress.class: nginx
+  nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  ```
+
 - 开启 `rbac.clusterAdminRole`
 
 
