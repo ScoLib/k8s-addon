@@ -22,6 +22,17 @@
 
 - 指定 `ingress.hosts`
 
+- 指定 `ingress.tls`
+
+  ```
+    tls:
+      - secretName: kubernetes-dashboard-tls
+        hosts:
+          - dashboard.k8s.lo
+  ```
+
+  
+
 - 指定 `ingress.annotations`
 
   ```
@@ -36,9 +47,23 @@
 ## 执行
 
 ```sh
+mkdir ~/ssl
+openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout ~/ssl/tls.key -out ~/ssl/tls.crt -subj "/CN=*.k8s.lo"
 # 生成tls证书secret
-kubectl create secret tls kubernetes-dashboard-tls -n kube-system --key ./tls.key --cert ./tls.crt
+kubectl create secret tls kubernetes-dashboard-tls -n kube-system --key ~/ssl/tls.key --cert ~/ssl/tls.crt
+
+# 查看
+kubectl get secret -n kube-system |grep dashboard
+
+# V2
 helm install --name kubernetes-dashboard --namespace kube-system -f ./files/kubernetes-dashboard.yaml stable/kubernetes-dashboard 
+
+# V3
+helm install kubernetes-dashboard --namespace kube-system -f ./files/kubernetes-dashboard.yaml stable/kubernetes-dashboard 
+
+# 查看
+kubectl get pods -n kube-system -o wide
+
 # 创建可读可写 admin Service Account
 cat << EOF | kubectl apply -f -
 apiVersion: v1

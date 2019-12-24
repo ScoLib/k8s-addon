@@ -14,3 +14,13 @@
 - [Helm 安装 Jenkins](./jenkins.md)
 - [Helm 安装 Kubernetes Dashboard](./kubernetes-dashboard.md)
 
+
+
+## 使用 
+
+```
+git clone https://github.com/ScoLib/k8s-addon.git
+cd k8s-addon
+
+```
+

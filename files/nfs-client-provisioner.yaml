@@ -6,7 +6,7 @@ replicaCount: 1
 strategyType: Recreate
 
 image:
-  repository: scolib/nfs-client-provisioner
+  repository: quay.azk8s.cn/external_storage/nfs-client-provisioner
   tag: v3.1.0-k8s1.11
   pullPolicy: IfNotPresent
 
@@ -48,6 +48,9 @@ rbac:
 # https://kubernetes.io/docs/concepts/policy/pod-security-policy/
 podSecurityPolicy:
   enabled: false
+
+## Set pod priorityClassName
+# priorityClassName: ""
 
 serviceAccount:
   # Specifies whether a ServiceAccount should be created

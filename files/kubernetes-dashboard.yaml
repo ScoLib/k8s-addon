@@ -155,7 +155,7 @@ rbac:
 
   # Specifies whether cluster-admin ClusterRole will be used for dashboard
   # ServiceAccount (NOT RECOMMENDED).
-  clusterAdminRole: true
+  clusterAdminRole: false
 
   # Start in ReadOnly mode.
   # Only dashboard-related Secrets and ConfigMaps will still be available for writing.

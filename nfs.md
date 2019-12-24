@@ -68,6 +68,10 @@ ansible-playbook ~/nfs-server.yaml
 ### 安装 provisioner
 
 ```sh
+# V2
 helm install --name nfs-client-provisioner -f ./files/nfs-client-provisioner.yaml --set nfs.server=x.x.x.x --set nfs.path=/exported/path stable/nfs-client-provisioner
+
+# V3
+helm install nfs-client-provisioner -f ./files/nfs-client-provisioner.yaml --set nfs.server=x.x.x.x --set nfs.path=/exported/path stable/nfs-client-provisioner
 ```
 

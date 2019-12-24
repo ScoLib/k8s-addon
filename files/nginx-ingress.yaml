@@ -261,17 +261,17 @@ controller:
       http: http
       https: https
 
-    # type: LoadBalancer
+    type: ClusterIP
 
-    type: NodePort
+    # type: NodePort
     # nodePorts:
     #   http: 32080
     #   https: 32443
     #   tcp:
     #     8080: 32808
     nodePorts:
-      http: "32080"
-      https: "32443"
+      http: ""
+      https: ""
       tcp: {}
       udp: {}
 
