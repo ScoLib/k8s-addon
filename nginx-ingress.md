@@ -15,10 +15,10 @@
 
 ```sh
 # V2
-helm install --name nginx-ingress --namespace ingress -f ./files/nginx-ingress.yaml  --set controller.service.clusterIP=x.x.x.x stable/nginx-ingress
+helm install --name nginx-ingress --namespace ingress -f ./files/nginx-ingress.yaml --set controller.service.clusterIP=x.x.x.x stable/nginx-ingress
 
 # V3
 kubectl create namespace ingress
-helm install nginx-ingress --namespace ingress -f ./files/nginx-ingress.yaml  --set controller.service.clusterIP=x.x.x.x stable/nginx-ingress
+helm install nginx-ingress --namespace ingress -f ./files/nginx-ingress.yaml --set controller.service.clusterIP=x.x.x.x stable/nginx-ingress
 ```
 
