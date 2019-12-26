@@ -612,13 +612,20 @@ grafana:
 
 ## Settings for individual sub-charts under GitLab
 ## Note: Many of these settings are configurable via globals
-# gitlab:
+gitlab:
 ## doc/charts/gitlab/migrations
 #   migrations:
 #     enabled: false
 ## doc/charts/gitlab/unicorn
-#   unicorn:
+  unicorn:
 #     enabled: false
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 1.5Gi
+      requests:
+        cpu: 500m
+        memory: 1Gi
 ## doc/charts/gitlab/sidekiq
 #   sidekiq:
 #     enabled: false
