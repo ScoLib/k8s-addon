@@ -58,21 +58,19 @@
 
 - 指定 `kubeStateMetrics.image.repository`  
 
-- 指定 `alertmanagerFiles.alertmanager.yml.global`
+- 指定 `alertmanagerFiles.alertmanager.yml`
 
   ```yaml
+  alertmanagerFiles:
+    alertmanager.yml:
+      global: 
         smtp_smarthost: 'smtp.163.com:25'
         smtp_from: 'xxxx@163.com'
         smtp_auth_username: 'xxxx@163.com'
         smtp_auth_password: '*********'
         smtp_require_tls: false
-  ```
-
   
-
-- 指定 `alertmanagerFiles.alertmanager.yml.receivers`
-
-  ```yaml
+      receivers:
         - name: 'AlertMail'
           email_configs:
           - to: 'xxxx@163.com'
@@ -81,13 +79,8 @@
           - send_resolved: false
             # 需要运行插件 dingtalk-webhook.yaml，详情阅读 docs/guide/prometheus.md
             url: http://webhook-dingtalk.monitoring.svc.cluster.local:8060/dingtalk/webhook1/send
-  ```
-
   
-
-- 指定 `alertmanagerFiles.alertmanager.yml.route`
-
-  ```yaml
+      route:
         group_by: ['alertname', 'pod_name']
         group_wait: 10s
         group_interval: 5m
@@ -101,6 +94,8 @@
 - 指定 `serverFiles.alerting_rules.yml`
 
   ```yaml
+  serverFiles:
+    alerting_rules.yml: 
       groups:
         - name: k8s_alert_rules
           rules:
@@ -117,9 +112,9 @@
               for: 60s
               annotations:
                 summary: "Node {{ $labels.kubernetes_io_hostname }} is down"
-                description: "Node {{ $labels.kubernetes_io_hostname }} is down"
+              description: "Node {{ $labels.kubernetes_io_hostname }} is down"
   ```
-
+  
   
 
 
@@ -135,6 +130,15 @@ kubectl create namespace monitoring
 # 创建证书
 kubectl create secret tls prometheus-ingress-tls -n monitoring --key ~/ssl/tls.key --cert ~/ssl/tls.crt
 
+
+# V2
+helm install --name prometheus --namespace monitoring -f ./files/prometheus.yaml stable/prometheus
+
+# V3
+
+helm install prometheus --namespace monitoring -f ./files/prometheus.yaml stable/prometheus
+
+
 # 创建钉钉告警插件
 cat << EOF | kubectl apply -f -
 ---
@@ -146,6 +150,9 @@ metadata:
   name: webhook-dingtalk
   namespace: monitoring
 spec:
+  selector:
+    matchLabels:
+      run: dingtalk
   replicas: 1
   template:
     metadata:
@@ -183,12 +190,7 @@ EOF
 
 
 
-# V2
-helm install --name prometheus --namespace monitoring -f ./files/prometheus.yaml stable/prometheus
 
-# V3
-
-helm install prometheus --namespace monitoring -f ./files/prometheus.yaml stable/prometheus
 
 
 ```
