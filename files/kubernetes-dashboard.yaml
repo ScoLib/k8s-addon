@@ -27,7 +27,8 @@ enableInsecureLogin: false
 
 ## Additional container arguments
 ##
-# extraArgs:
+extraArgs:
+  - --token-ttl=43200 # 单位秒
 #   - --enable-skip-login
 #   - --enable-insecure-login
 #   - --system-banner="Welcome to Kubernetes"

@@ -6,7 +6,7 @@
 
 - 替换镜像
 
-- ~~`extraArgs` 增加参数 `token-ttl=1800`~~
+- `extraArgs` 增加参数 `--token-ttl=43200`
 
 - 指定 `tolerations` 
 
