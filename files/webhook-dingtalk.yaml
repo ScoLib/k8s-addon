@@ -1,0 +1,82 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: webhook-dingtalk-cfg
+  labels:
+    run: dingtalk
+  namespace: monitoring
+data:
+  config.yaml: |
+    ## Request timeout
+    # timeout: 5s
+
+    ## Customizable templates path
+    # templates:
+    #   - contrib/templates/legacy/template.tmpl
+
+    ## You can also override default template using `default_message`
+    ## The following example to use the 'legacy' template from v0.3.0
+    # default_message:
+    #   title: '{{ template "legacy.title" . }}'
+    #   text: '{{ template "legacy.content" . }}'
+
+    ## Targets, previously was known as "profiles"
+    ## 设置钉钉群聊自定义机器人后，使用实际 access_token 替换下面 xxxxxx部分
+    targets:
+      webhook1:
+        url: https://oapi.dingtalk.com/robot/send?access_token=access_token_demo
+        # secret for signature
+        ## 如果安全设置使用加签方式时，需设置 secret
+        # secret: secret_demo
+
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  labels:
+    run: dingtalk
+  name: webhook-dingtalk
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      run: dingtalk
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: dingtalk
+    spec:
+      containers:
+      - name: dingtalk
+        image: timonwong/prometheus-webhook-dingtalk:v1.4.0
+        imagePullPolicy: IfNotPresent
+        args:
+          - --config.file=/etc/dingtalk/config.yaml
+        ports:
+        - containerPort: 8060
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/dingtalk
+          name: webhook-dingtalk-cfg
+      volumes:
+      - name: webhook-dingtalk-cfg
+        configMap:
+          name: webhook-dingtalk-cfg
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: dingtalk
+  name: webhook-dingtalk
+  namespace: monitoring
+spec:
+  ports:
+  - port: 8060
+    protocol: TCP
+    targetPort: 8060
+  selector:
+    run: dingtalk
+  sessionAffinity: None
