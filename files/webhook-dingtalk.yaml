@@ -30,6 +30,7 @@ data:
         ## 如果安全设置使用加签方式时，需设置 secret
         # secret: secret_demo
 
+---
 apiVersion: apps/v1 
 kind: Deployment
 metadata:
