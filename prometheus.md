@@ -122,12 +122,12 @@
 
 ## 执行
 
-```sh
+```bash
 # 自行添加钉钉机器人，记录webhook地址： https://oapi.dingtalk.com/robot/send?access_token=xxxxxxxx
 
 kubectl create namespace monitoring
 
-# 创建证书
+# 创建证书secret 证书文件需自行创建
 kubectl create secret tls prometheus-ingress-tls -n monitoring --key ~/ssl/tls.key --cert ~/ssl/tls.crt
 
 
@@ -140,58 +140,10 @@ helm install prometheus --namespace monitoring -f ./files/prometheus.yaml stable
 
 
 # 创建钉钉告警插件
-cat << EOF | kubectl apply -f -
----
-apiVersion: apps/v1 
-kind: Deployment
-metadata:
-  labels:
-    run: dingtalk
-  name: webhook-dingtalk
-  namespace: monitoring
-spec:
-  selector:
-    matchLabels:
-      run: dingtalk
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        run: dingtalk
-    spec:
-      containers:
-      - name: dingtalk
-        image: timonwong/prometheus-webhook-dingtalk:v1.4.0
-        imagePullPolicy: IfNotPresent
-        # 设置钉钉群聊自定义机器人后，使用实际 access_token 替换下面 xxxxxx部分
-        args:
-          - --ding.profile=webhook1=https://oapi.dingtalk.com/robot/send?access_token=xxxxxx
-        ports:
-        - containerPort: 8060
-          protocol: TCP
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    run: dingtalk
-  name: webhook-dingtalk
-  namespace: monitoring
-spec:
-  ports:
-  - port: 8060
-    protocol: TCP
-    targetPort: 8060
-  selector:
-    run: dingtalk
-  sessionAffinity: None
-EOF
-
-
-
-
-
+sed -i 's/access_token_demo/access_token值/g' ./files/webhook-dingtalk.yaml
+# 如果安全设置使用密钥方式
+sed -i 's/# secret: secret_demo/secret: secret值/g' ./files/webhook-dingtalk.yaml
+kubectl apply -f ./files/webhook-dingtalk.yaml
 
 ```
 
