@@ -76,13 +76,13 @@ global:
 
   ## doc/charts/globals.md#configure-postgresql-settings
   psql:
-    password: {}
-      # secret:
-      # key:
-    # host: postgresql.hostedsomewhere.else
+    password: 
+      secret: gitlab-postgres-postgresql
+      key: postgresql-password
+    host: gitlab-postgres-postgresql
     # port: 123
-    # username: gitlab
-    # database: gitlabhq_production
+    username: postgres
+    database: gitlabhq_production
     # preparedStatements: false
 
   ## doc/charts/globals.md#configure-redis-settings
@@ -529,7 +529,7 @@ redis-ha:
 ## Instllation & configuration of stable/prostgresql
 ## See requirements.yaml for current version
 postgresql:
-  install: true
+  install: false
   postgresUser: gitlab
   postgresDatabase: gitlabhq_production
   imageTag: 9.6.8
@@ -630,8 +630,10 @@ gitlab:
 #   sidekiq:
 #     enabled: false
 ## doc/charts/gitlab/gitaly
-#   gitaly:
+  gitaly:
 #     enabled: false
+    image:
+      pullPolicy: IfNotPresent
 ## doc/charts/gitlab/gitlab-shell
 #   gitlab-shell:
 #     enabled: false
